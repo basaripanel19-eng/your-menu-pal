@@ -3,16 +3,12 @@ import { playGo, playTick, unlockAudio } from "./sounds";
 
 const STEPS = ["3", "2", "1", "BAŞLA!"];
 
-/** Yarışma başladığında (PLAYING'e geçiş, 1. soru) 3-2-1-BAŞLA! geri sayımı gösterir ve ses çalar.
+/** Yarışma başladığında (PLAYING'e geçiş, 1. soru) 3-2-1-BAŞLA! geri sayımını gösterir ve ses çalar.
  *  Öğretmen ve oyuncu ekranları aynı durum değişikliğini aynı anda gördüğü için birlikte çalar.
- *  Geri sayım sırasında öğrenci ekranı tam ekran olur: katılırken istenmişse zaten tam ekrandır,
- *  değilse overlay üzerinde tek dokunuşla tam ekran açılır. */
+ *  Tam ekran katılırken istenir; geri sayım sırasında ekranda yalnızca sayılar görünür. */
 export function useStartCountdown(status: string | undefined, qIndex: number | undefined) {
   const prev = useRef<string | undefined>(undefined);
   const [step, setStep] = useState<number | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(
-    () => typeof document !== "undefined" && !!document.fullscreenElement,
-  );
 
   useEffect(() => {
     unlockAudio();
