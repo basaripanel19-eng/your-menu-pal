@@ -47,7 +47,15 @@ function PlayerScreen() {
   return <GameView code={code} playerId={playerId} />;
 }
 
-function Shell({ children }: { children: React.ReactNode }) {
+function Shell({ children, full }: { children: React.ReactNode; full?: boolean }) {
+  if (full) {
+    // Yarışma alanı: kart yok, tüm ekranı kaplar.
+    return (
+      <main className="flex min-h-[100dvh] w-full flex-col bg-background px-4 pb-8 pt-5 sm:px-8">
+        {children}
+      </main>
+    );
+  }
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
       <div className="w-full max-w-md rounded-[var(--radius)] bg-panel p-6 shadow-[var(--shadow-panel)]">
@@ -64,6 +72,14 @@ function JoinForm({ code, onJoined }: { code: string; onJoined: (id: string) => 
   const [loading, setLoading] = useState(false);
 
   const handle = async () => {
+    // Tarayıcı tam ekranı yalnızca kullanıcı hareketiyle açılabilir; katılırken iste.
+    try {
+      if (typeof document !== "undefined" && !document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch {
+      /* tam ekran reddedilirse oyun normal devam eder */
+    }
     setLoading(true);
     setError(null);
     try {
@@ -172,14 +188,24 @@ function GameView({ code, playerId }: { code: string; playerId: string }) {
         <p className="mt-2 text-center text-sm text-muted-foreground">
           Öğretmen oyunu başlattığında sorular burada görünecek.
         </p>
+        {typeof document !== "undefined" && !document.fullscreenElement && (
+          <button
+            onClick={() => {
+              void document.documentElement.requestFullscreen().catch(() => {});
+            }}
+            className="mt-5 w-full rounded-2xl border-2 border-border px-6 py-3 text-sm font-bold text-foreground hover:bg-muted"
+          >
+            TAM EKRAN YAP
+          </button>
+        )}
       </Shell>
     );
   }
 
   return (
-    <Shell>
+    <Shell full>
       {countdown}
-      <div className="flex items-center justify-between gap-3">
+      <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3">
         <div className={`rounded-full ${teamColor} px-4 py-1.5 text-sm font-bold text-panel`}>
           {teamLabel}
         </div>
@@ -189,6 +215,7 @@ function GameView({ code, playerId }: { code: string; playerId: string }) {
       </div>
 
       {q && (
+        <div className="mx-auto w-full max-w-3xl">
         <>
           <p className="mt-5 text-xs font-semibold tracking-[0.2em] text-muted-foreground">
             SORU {q.index} / {q.total} • {q.category.toUpperCase()}
@@ -282,6 +309,7 @@ function GameView({ code, playerId }: { code: string; playerId: string }) {
             <p className="mt-4 text-center text-sm font-semibold text-destructive">{error}</p>
           )}
         </>
+        </div>
       )}
     </Shell>
   );
