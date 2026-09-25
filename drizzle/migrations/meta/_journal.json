@@ -64,6 +64,13 @@
       "when": 1790322471784,
       "tag": "0008_20260925072402_create_game_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790322479670,
+      "tag": "0009_20260925072415_server_only_policies",
+      "breakpoints": true
     }
   ]
 }
