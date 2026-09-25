@@ -47,7 +47,15 @@ function PlayerScreen() {
   return <GameView code={code} playerId={playerId} />;
 }
 
-function Shell({ children }: { children: React.ReactNode }) {
+function Shell({ children, full }: { children: React.ReactNode; full?: boolean }) {
+  if (full) {
+    // Yarışma alanı: kart yok, tüm ekranı kaplar.
+    return (
+      <main className="flex min-h-[100dvh] w-full flex-col bg-background px-4 pb-8 pt-5 sm:px-8">
+        {children}
+      </main>
+    );
+  }
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
       <div className="w-full max-w-md rounded-[var(--radius)] bg-panel p-6 shadow-[var(--shadow-panel)]">
@@ -195,9 +203,9 @@ function GameView({ code, playerId }: { code: string; playerId: string }) {
   }
 
   return (
-    <Shell>
+    <Shell full>
       {countdown}
-      <div className="flex items-center justify-between gap-3">
+      <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3">
         <div className={`rounded-full ${teamColor} px-4 py-1.5 text-sm font-bold text-panel`}>
           {teamLabel}
         </div>
