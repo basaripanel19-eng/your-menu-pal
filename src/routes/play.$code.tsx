@@ -215,6 +215,7 @@ function GameView({ code, playerId }: { code: string; playerId: string }) {
       </div>
 
       {q && (
+        <div className="mx-auto w-full max-w-3xl">
         <>
           <p className="mt-5 text-xs font-semibold tracking-[0.2em] text-muted-foreground">
             SORU {q.index} / {q.total} • {q.category.toUpperCase()}
@@ -308,6 +309,7 @@ function GameView({ code, playerId }: { code: string; playerId: string }) {
             <p className="mt-4 text-center text-sm font-semibold text-destructive">{error}</p>
           )}
         </>
+        </div>
       )}
     </Shell>
   );
