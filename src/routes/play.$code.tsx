@@ -64,6 +64,14 @@ function JoinForm({ code, onJoined }: { code: string; onJoined: (id: string) => 
   const [loading, setLoading] = useState(false);
 
   const handle = async () => {
+    // Tarayıcı tam ekranı yalnızca kullanıcı hareketiyle açılabilir; katılırken iste.
+    try {
+      if (typeof document !== "undefined" && !document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch {
+      /* tam ekran reddedilirse oyun normal devam eder */
+    }
     setLoading(true);
     setError(null);
     try {
@@ -172,6 +180,16 @@ function GameView({ code, playerId }: { code: string; playerId: string }) {
         <p className="mt-2 text-center text-sm text-muted-foreground">
           Öğretmen oyunu başlattığında sorular burada görünecek.
         </p>
+        {typeof document !== "undefined" && !document.fullscreenElement && (
+          <button
+            onClick={() => {
+              void document.documentElement.requestFullscreen().catch(() => {});
+            }}
+            className="mt-5 w-full rounded-2xl border-2 border-border px-6 py-3 text-sm font-bold text-foreground hover:bg-muted"
+          >
+            TAM EKRAN YAP
+          </button>
+        )}
       </Shell>
     );
   }
